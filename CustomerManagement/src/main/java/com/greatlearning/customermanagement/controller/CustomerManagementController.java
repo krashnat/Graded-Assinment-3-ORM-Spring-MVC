@@ -49,25 +49,23 @@ public class CustomerManagementController {
 			@RequestParam("lastname") String lastName, @RequestParam("email") String email) {
 
 		Customer customer = customerServiceImpl.findById(id);
-		
+
 		if (customer != null) {
 			customer.setEmail(email);
 			customer.setFirstName(firstName);
 			customer.setLastName(lastName);
-		}
-		else
+		} else
 			customer = new Customer(firstName, lastName, email);
-		
+
 		customerServiceImpl.save(customer);
-		
-		
+
 		return "redirect:/manage/list";
 	}
-	
+
 	@RequestMapping("/delete")
 	public String delete(@RequestParam("id") int id) {
 		customerServiceImpl.deleteById(id);
-		
+
 		return "redirect:/manage/list";
 	}
 

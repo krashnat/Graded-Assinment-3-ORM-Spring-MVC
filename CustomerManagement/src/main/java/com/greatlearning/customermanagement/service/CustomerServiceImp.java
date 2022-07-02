@@ -12,59 +12,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.greatlearning.customermanagement.entity.Customer;
+import com.greatlearning.customermanagement.repository.CustomerRepository;
 
 @Service
 public class CustomerServiceImp implements CustomerService {
 
-	private SessionFactory sessionFactory;
-	private Session session;
-
 	@Autowired
-	public CustomerServiceImp(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-		try {
-			session = sessionFactory.getCurrentSession();
-		} catch (HibernateException ex) {
-			session = sessionFactory.openSession();
-		}
-	}
+	private CustomerRepository repository;
 
 	@Override
 	@Transactional
 	public List<Customer> findAll() {
-		Transaction tx = session.beginTransaction();
-		List<Customer> customers = session.createQuery("from Customer").list();
-		tx.commit();
-		
-		return customers;
+		return repository.findAll();
+
 	}
 
 	@Override
 	@Transactional
 	public Customer findById(int id) {
-		Transaction tx = session.beginTransaction();
-		Customer customer = session.get(Customer.class, id);
-		tx.commit();
 
-		return customer;
+		return repository.findById(id);
+
 	}
 
 	@Override
 	@Transactional
 	public void save(Customer customer) {
-		Transaction tx = session.beginTransaction();
-		session.saveOrUpdate(customer);
-		tx.commit();
+		repository.save(customer);
+
 	}
 
 	@Override
 	@Transactional
 	public void deleteById(int id) {
-		Transaction tx = session.beginTransaction();
-		Customer customer = session.get(Customer.class, id);
-		if (customer != null)
-			session.delete(customer);
-		tx.commit();
+
+		repository.deleteById(id);
+
 	}
 
 }
